@@ -1,44 +1,38 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const windows = document.querySelectorAll(".window");
+    document.addEventListener("mousedown", (e) => {
+        if (!e.target.closest(".window-header")) return;
 
-    windows.forEach((windowElement) => {
-        const header = windowElement.querySelector(".window-header");
+        let windowElement = e.target.closest(".window");
+        let startX = e.clientX;
+        let startY = e.clientY;
+        let startLeft = windowElement.offsetLeft;
+        let startTop = windowElement.offsetTop;
+        let isDragging = true;
 
-        let isDragging = false;
-        let startX, startY, startLeft, startTop;
+        const onMouseMove = (e) => {
+            if (!isDragging) return;
 
-        header.addEventListener("mousedown", (e) => {
-            isDragging = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            startLeft = windowElement.offsetLeft;
-            startTop = windowElement.offsetTop;
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
 
-            const onMouseMove = (e) => {
-                if (!isDragging) return;
+            let newLeft = startLeft + dx;
+            let newTop = startTop + dy;
 
-                const dx = e.clientX - startX;
-                const dy = e.clientY - startY;
+            // Prevent moving off-screen
+            newLeft = Math.max(0, Math.min(window.innerWidth - windowElement.offsetWidth, newLeft));
+            newTop = Math.max(0, Math.min(window.innerHeight - windowElement.offsetHeight, newTop));
 
-                let newLeft = startLeft + dx;
-                let newTop = startTop + dy;
+            windowElement.style.left = `${newLeft}px`;
+            windowElement.style.top = `${newTop}px`;
+        };
 
-                // Prevent moving off-screen
-                newLeft = Math.max(0, Math.min(window.innerWidth - windowElement.offsetWidth, newLeft));
-                newTop = Math.max(0, Math.min(window.innerHeight - windowElement.offsetHeight, newTop));
+        const onMouseUp = () => {
+            isDragging = false;
+            document.removeEventListener("mousemove", onMouseMove);
+            document.removeEventListener("mouseup", onMouseUp);
+        };
 
-                windowElement.style.left = `${newLeft}px`;
-                windowElement.style.top = `${newTop}px`;
-            };
-
-            const onMouseUp = () => {
-                isDragging = false;
-                document.removeEventListener("mousemove", onMouseMove);
-                document.removeEventListener("mouseup", onMouseUp);
-            };
-
-            document.addEventListener("mousemove", onMouseMove);
-            document.addEventListener("mouseup", onMouseUp);
-        });
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
     });
 });
