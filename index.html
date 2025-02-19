@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <div class="desktop-container">
+        <div class="desktop">
+
+            <!----------------- Folders -------------------->
+            <div class="folders">
+                <div class="folder" data-window="window-myPC">
+                    <div class="folder-icon">
+                        <img src="assets/folder-mac.png" />
+                    </div>
+                    <div class="folder-name">
+                        <p>My PC</p>
+                    </div>
+                </div>
+
+                <div class="folder" data-window="window-documents">
+                    <div class="folder-icon">
+                        <img src="assets/folder-mac.png" />
+                    </div>
+                    <div class="folder-name">
+                        <p>Documents</p>
+                    </div>
+                </div>
+            </div>
+
+            <!----------------- Windows -------------------->
+            <div class="window hidden" id="window-myPC">
+                <div class="window-header">
+                    <div class="window-header-left">
+                        <div class="window-buttons">
+                            <div class="window-button close"></div>
+                            <div class="window-button minimize"></div>
+                            <div class="window-button maximize"></div>
+                        </div>
+                    </div>
+                    <div class="window-header-right">
+                        <div id="placeholder-text">
+                            <i class="bi bi-chevron-left"></i>
+                            <i class="bi bi-chevron-right"></i>
+                        </div>
+                        <div class="window-title">
+                            <p>My PC</p>
+                        </div>
+                        <i class="bi bi-search search-icon" data-search-target="search-bar-mypc"></i>
+                        <div class="search-bar" id="search-bar-mypc">
+                            <input type="text" placeholder="Search..." />
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="section-divider"></div> -->
+                <div class="window-sidebar">
+                    <div class="window-sidebar-item">
+                        <p>My PC</p>
+                    </div>
+                    <div class="window-sidebar-item">
+                        <p>Documents</p>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div class="folders">
+                        <div class="folder">
+                            <div class="folder-icon">
+                                <img src="assets/folder-mac.png" />
+                            </div>
+                            <div class="folder-name">
+                                <p>C:</p>
+                            </div>
+                        </div>
+
+                        <div class="folder">
+                            <div class="folder-icon">
+                                <img src="assets/folder-mac.png" />
+                            </div>
+                            <div class="folder-name">
+                                <p>D:</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="window hidden" id="window-documents">
+                <div class="window-header">
+                    <div class="window-header-left">
+                        <div class="window-buttons">
+                            <div class="window-button close"></div>
+                            <div class="window-button minimize"></div>
+                            <div class="window-button maximize"></div>
+                        </div>
+                    </div>
+                    <div class="window-header-right">
+                        <div id="placeholder-text">
+                            <i class="bi bi-chevron-left"></i>
+                            <i class="bi bi-chevron-right"></i>
+                        </div>
+                        <div class="window-title">
+                            <p>Documents</p>
+                        </div>
+                        <i class="bi bi-search search-icon" data-search-target="search-bar-documents"></i>
+                        <div class="search-bar" id="search-bar-documents">
+                            <input type="text" placeholder="Search..." />
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="section-divider"></div> -->
+                <div class="window-sidebar">
+                    <div class="window-sidebar-item">
+                        <p>My PC</p>
+                    </div>
+                    <div class="window-sidebar-item">
+                        <p>Documents</p>
+                    </div>
+                </div>
+
+                <div class="window-content">
+                    <!-- <p style="justify-content: center;">This folder is empty.</p> -->
+
+                </div>
+            </div>
+
+            <div class="resize-handle top"></div>
+            <div class="resize-handle bottom"></div>
+            <div class="resize-handle left"></div>
+            <div class="resize-handle right"></div>
+            <div class="resize-handle bottom-right"></div>
+
+
+            <!----------------- Start Menu -------------------->
+            <!-- <div class="menu hidden" id="start-menu">
+            <div class="menu-item" id="test-folder-button">
+                <p>Folder</p>
+            </div>
+            <div class="menu-item">
+                <p>Folder</p>
+            </div>
+        </div> -->
+
+            <div id="start-menu-container" class="hidden">
+                <!-- <div id="start-menu-header">
+                <div class="window-buttons">
+                    <div class="window-button close"></div>
+                    <div class="window-button minimize"></div>
+                    <div class="window-button maximize"></div>
+                </div>
+            </div> -->
+
+                <div class="menu">
+                    <div class="menu-sidebar">
+                        <div class="menu-item">
+                            <p>System</p>
+                        </div>
+                        <div class="menu-item">
+                            <p>Documents</p>
+                        </div>
+                    </div>
+
+                    <div class="menu-main">
+                        <div class="menu-apps-header">
+                            <p>System</p>
+                            <div class="search-container">
+                                <input type="text" placeholder="Search" />
+                            </div>
+                        </div>
+                        <div class="app-container">
+                            <div class="menu-item">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!----------------- Taskbar -------------------->
+    <div class="taskbar">
+        <div class="taskbar-icon">
+            <img src="assets/Icon_512x512_Normallpad.png" id="start-menu-button" />
+        </div>
+
+        <div class="taskbar-windows"></div>
+    </div>
+
+    <script src="./main.js"></script>
+    <script src="./scripts/dragwindows.js"></script>
+    <script src="./scripts/taskbarWindows.js"></script>
+    <script src="./scripts/resizewindows.js"></script>
+    <script src="./scripts/openExplorerSearch.js"></script>
+</body>
+
+</html>
