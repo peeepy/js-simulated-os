@@ -1,29 +1,6 @@
-// const apps = {
-//     explorer: {
-//         title: "Explorer",
-//         icon: "assets/folder-mac.png",
-//         content: "<p>This is the Explorer window.</p>",
-//         desktop: true
-//     },
-//     documents: {
-//         title: "Documents",
-//         icon: "assets/folder-mac.png",
-//         content: "<p>This is the Documents window.</p>",
-//         desktop: true
-//     },
-//     notepad: {
-//         title: "Notepad",
-//         icon: "assets/notepad-icon.png",
-//         content: `<textarea style="width: 100%; height: 100%; border: none; outline: none; font-size: 16px;"></textarea>`,
-//         desktop: false
-//     },
-//     calculator: {
-//         title: "Calculator",
-//         icon: "assets/calculator-icon.png",
-//         content: "<p>This is a calculator.</p>",
-//         desktop: false
-//     }
-// };
+import { apps } from "./appManager.js";
+import { openApp } from "./appManager.js";
+import { addWindowToTaskbar } from "./taskbarManager.js";
 
 document.getElementById("start-menu-button").addEventListener("click", () => {
     const menu = document.getElementById("start-menu-container");
@@ -32,23 +9,45 @@ document.getElementById("start-menu-button").addEventListener("click", () => {
 
 function renderStartMenu() {
     const appContainer = document.querySelector(".app-container");
-    appContainer.innerHTML = ""; // Clear existing apps
+    const sidebarItems = document.querySelectorAll(".menu-sidebar .menu-item");
+    const menuTitle = document.getElementById("menu-title");
 
-    Object.keys(apps).forEach(appId => {
-        const app = apps[appId];
+    let activeSection = "applications"; // Default section
 
-        let menuItem = document.createElement("div");
-        menuItem.classList.add("menu-item");
-        menuItem.dataset.app = appId;
-        menuItem.innerHTML = `<p>${app.title}</p>`;
+    function updateMenu() {
+        appContainer.innerHTML = ""; // Clear existing apps
 
-        menuItem.addEventListener("click", () => {
-            openApp(appId);
+        Object.keys(apps).forEach(appId => {
+            const app = apps[appId];
+
+            if (
+                (activeSection === "documents" && app.type === "document") ||
+                (activeSection === "applications" && app.type === "application")
+            ) {
+                let menuItem = document.createElement("div");
+                menuItem.classList.add("menu-item");
+                menuItem.dataset.app = appId;
+                menuItem.innerHTML = `<p>${app.title}</p>`;
+
+                menuItem.addEventListener("click", () => {
+                    openApp(appId);
+                });
+
+                appContainer.appendChild(menuItem);
+            }
         });
+    }
 
-        appContainer.appendChild(menuItem);
+    sidebarItems.forEach(item => {
+        item.addEventListener("click", () => {
+            activeSection = item.dataset.section;
+            menuTitle.textContent = activeSection.charAt(0).toUpperCase() + activeSection.slice(1); // Update title
+            updateMenu();
+        });
     });
+
+    updateMenu(); // Initial render
 }
 
-// Run this function on page load
-document.addEventListener("DOMContentLoaded", renderStartMenu);
+document.addEventListener("DOMContentLoaded", renderStartMenu());
+
