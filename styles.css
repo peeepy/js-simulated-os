@@ -1,12 +1,20 @@
 /* Ensure full-screen layout without scrolling */
+@font-face {
+    font-family: "Segoe UI Variable";
+    src: url("./assets/fonts/SegoeUI-VF.ttf");
+}
+@font-face {
+    font-family: "Segoe UI Variable Display";
+    src: url("./assets/fonts/Segoe-UI-Variable-Static-Display.ttf");
+}
 html,
 body {
     margin: 0;
     padding: 0;
     height: 100vh;
     overflow: hidden;
-    font-family: 'Roboto', sans-serif;
-    background-image: url('assets/wallpaper2.jpg');
+    font-family: 'Segoe UI Variable Display', sans-serif;
+    background-image: url('assets/win95.png');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -34,9 +42,9 @@ body {
     position: relative;
     display: flex;
     flex-wrap: wrap;
-    flex-direction: row;
+    flex-direction: column;
     gap: 16px;
-    padding: 16px;
+    padding-left: 16px;
     grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
     overflow: hidden;
     height: calc(100vh - 4rem);
@@ -76,8 +84,8 @@ body {
 }
 
 .taskbar img {
-    height: 48px;
-    width: 48px;
+    height: 40px;
+    width: 40px;
 
 }
 
@@ -91,13 +99,14 @@ body {
 }
 
 .taskbar-icon.focus {
-    border-bottom: 4px solid rgba(255, 255, 255, 0.397);
+        border-bottom: 3px solid rgba(255, 255, 255, 0.397);
     border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.397);
 }
 
 .taskbar-icon.open-indicator {
-    border-bottom: 4px solid rgba(255, 0, 0, 0.397);
-    border-radius: 0px;
+    border-bottom: 4px solid rgba(255, 255, 255, 0.397);
+    border-radius: 5px;
 }
 
 /* Updated: Separate pinned apps */
@@ -144,11 +153,12 @@ body {
     align-items: center;
     /* Center icon and text */
     text-align: center;
-    gap: 0px;
+    /* gap: 0px; */
     padding: 8px;
     cursor: pointer;
     height: 64px;
     width: 64px;
+    margin: 10px;
 }
 
 .folder-icon img {
@@ -159,6 +169,7 @@ body {
 .folder-name p {
     font-size: 14px;
     color: black;
+    margin: 1px;
 }
 
 .folder-icon {
@@ -176,9 +187,9 @@ body {
 /* Generic Window - No forced layout */
 .window {
     width: 40vw;
-    min-width: 300px;
-    height: 50vh;
-    min-height: 200px;
+    /* min-width: 300px; */
+    height: auto;
+    min-height: auto;
     position: absolute;
     border: 1px solid rgba(0, 0, 0, 0.11);
     box-shadow: #0000000c 0px 5px 10px;
@@ -196,6 +207,8 @@ body {
     grid-template-columns: 200px 1fr;
     /* Sidebar layout */
     grid-template-rows: auto 1fr;
+    min-height: 500px;
+    min-width: 400px;
 }
 
 /* Application-Specific Layout - No Sidebar */

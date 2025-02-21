@@ -1,14 +1,18 @@
 import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 
+let wasmerInitialised = false;
 export function initTerminal() {
   import("@wasmer/sdk").then(async ({ Wasmer, init, initializeLogger }) => {
     console.log("Initializing Wasmer...");
     
-    await init(); // Ensures WebAssembly is initialized
-    initializeLogger("debug");
-
-    console.log("Wasmer initialized!");
+    if (!wasmerInitialised) {
+      await init(); // Ensures WebAssembly is initialized
+      initializeLogger("debug");
+      wasmerInitialised = true;
+      console.log("Wasmer initialized!");
+    }
+    
 
 
     const term = new Terminal({ cursorBlink: true, convertEol: true });
@@ -17,12 +21,14 @@ export function initTerminal() {
     term.open(document.getElementById("terminal"));
     fit.fit();
 
-    term.writeln("Starting...");
+    term.writeln("Starting terminal...");
     try {
       const pkg = await Wasmer.fromRegistry("sharrattj/bash");
       console.log("Package loaded:", pkg);
 
-      const instance = pkg.entrypoint.run();
+      const instance = await pkg.entrypoint.run({
+    options: ["-i"],  // `-i` forces interactive mode
+});
       connectStreams(instance, term);
     } catch (error) {
       console.error("Failed to load Wasmer package:", error);

@@ -1,5 +1,5 @@
 import { updateTaskbarStyling, addWindowToTaskbar, closeWindow, minimizeWindow } from "./taskbarManager.js";
-import {initialiseApplication} from "./appManager.js";
+import {generateDrivesContent, initialiseApplication, openApp, openFolder} from "./appManager.js";
 
 let highestZIndex = 100;
 
@@ -13,6 +13,9 @@ export function createWindow(id, title, icon, content, type = "document") {
     windowDiv.style.zIndex = ++highestZIndex;
     windowDiv.style.left = "100px"; 
     windowDiv.style.top = "100px";
+    windowDiv.dataset.path = id; // Store path in dataset
+    windowDiv.dataset.history = JSON.stringify([id]); // Store navigation history
+    windowDiv.dataset.historyIndex = 0; // Track current position in history
 
     if (type === "application") {
         windowDiv.classList.add("window-application");
@@ -42,8 +45,8 @@ export function createWindow(id, title, icon, content, type = "document") {
                 </div>
                 <div class="window-header-right">
                     <div id="placeholder-text">
-                        <i class="bi bi-chevron-left"></i>
-                        <i class="bi bi-chevron-right"></i>
+                        <i class="bi bi-chevron-left nav-back"></i>
+                        <i class="bi bi-chevron-right nav-forward"></i>
                     </div>
                     <div class="window-title">${title}</div>
                     <i class="bi bi-search search-icon" data-search-target="search-bar-mypc"></i>
@@ -59,8 +62,8 @@ export function createWindow(id, title, icon, content, type = "document") {
         let sidebar = document.createElement("div");
         sidebar.classList.add("window-sidebar");
         sidebar.innerHTML = `
-            <div class="window-sidebar-item"><p>My PC</p></div>
-            <div class="window-sidebar-item"><p>Documents</p></div>
+            <div class="window-sidebar-item" id="sidebar-item-drives"><p>My PC</p></div>
+            <div class="window-sidebar-item"  id="sidebar-item-documents"><p>Documents</p></div>
         `;
         windowDiv.insertBefore(sidebar, windowDiv.querySelector(".window-content"));
     }
@@ -81,11 +84,88 @@ export function createWindow(id, title, icon, content, type = "document") {
     windowDiv.querySelector(".window-button.minimize").addEventListener("click", () => minimizeWindow(id));
     // windowDiv.querySelector(".window-button.maximize").addEventListener("click", () => maximizeWindow(id));
     windowDiv.addEventListener("click", () => bringWindowToFront(windowDiv));
+    windowDiv.querySelector("#sidebar-item-drives").addEventListener("click", () => openApp('drives'));
+    windowDiv.querySelector("#sidebar-item-documents").addEventListener("click", () => openFolder(["C:/documents"]));
+    // Add navigation event listeners
+    windowDiv.querySelector(".nav-back").addEventListener("click", () => navigateBack(windowDiv));
+    windowDiv.querySelector(".nav-forward").addEventListener("click", () => navigateForward(windowDiv));
+    windowDiv.querySelector(".window-title").addEventListener("click", () => {
+    toggleFullPath(windowDiv);
+});
+
     
+    windowDiv.querySelector(".window-title").addEventListener("click", () => {
+    toggleFullPath(windowDiv);
+});
+
     makeWindowDraggable(windowDiv);
     enableResizeHandles(windowDiv);
 }
 
+function toggleFullPath(windowElement) {
+    const titleElement = windowElement.querySelector(".window-title");
+    if (!titleElement) return;
+
+    const fullPath = windowElement.dataset.path;
+    const folderName = fullPath.split(',').pop();
+
+    if (titleElement.textContent === folderName) {
+        titleElement.textContent = fullPath; // Expand to full path
+    } else {
+        titleElement.textContent = folderName; // Collapse back to folder name
+    }
+}
+
+
+
+export function updateWindowTitle(windowElement, path) {
+    const titleElement = windowElement.querySelector(".window-title");
+    if (titleElement) {
+        const folderName = path.split(',').pop(); // Last folder in path
+        titleElement.textContent = folderName;
+    }
+}
+
+
+export function pushNavigationHistory(windowElement, path) {
+    let history = JSON.parse(windowElement.dataset.history);
+    let index = parseInt(windowElement.dataset.historyIndex, 10);
+
+    // Remove future history if user navigated back and then opened a new folder
+    history = history.slice(0, index + 1);
+    history.push(path);
+    
+    windowElement.dataset.history = JSON.stringify(history);
+    windowElement.dataset.historyIndex = history.length - 1;
+}
+
+function navigateBack(windowElement) {
+    let history = JSON.parse(windowElement.dataset.history);
+    let index = parseInt(windowElement.dataset.historyIndex, 10);
+    
+    if (index > 0) {
+        index--;
+        windowElement.dataset.historyIndex = index;
+        const path = history[index];
+
+        console.log("⬅ Navigating back to:", path);
+        openFolder(path);
+    }
+}
+
+function navigateForward(windowElement) {
+    let history = JSON.parse(windowElement.dataset.history);
+    let index = parseInt(windowElement.dataset.historyIndex, 10);
+    
+    if (index < history.length - 1) {
+        index++;
+        windowElement.dataset.historyIndex = index;
+        const path = history[index];
+
+        console.log("➡ Navigating forward to:", path);
+        openFolder(path);
+    }
+}
 
 
 // 🟢 Bring Window to Front (Fix Taskbar Delay)
