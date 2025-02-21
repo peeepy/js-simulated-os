@@ -72,13 +72,12 @@ function generateFolderContent(path) {
     }
 
     return `
-        <div id="breadcrumb">${generateBreadcrumbs(path)}</div>
         <div class="folders">
             ${Object.keys(folder).map(item => {
                 const isFolder = typeof folder[item] === 'object';
                 return `
                     <div class="folder" ondblclick="${isFolder ? `openFolder('${[...path, item].join(',')}')` : `openFile('${[...path, item].join(',')}')` }">
-                        <div class="folder-icon"><img src="assets/icons/desktop/${isFolder ? 'folder_closed.png' : 'file.png'}" /></div>
+                        <div class="folder-icon"><img src="assets/icons/desktop/${isFolder ? 'folder_closed.png' : 'text_file.png'}" /></div>
                         <div class="folder-name"><p>${item}</p></div>
                     </div>
                 `;
